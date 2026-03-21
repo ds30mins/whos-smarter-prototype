@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Who's Smarter?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1c1c27;
+    --border: rgba(255,255,255,0.08);
+    --accent: #c8f135;
+    --accent2: #7b5ea7;
+    --text: #f0f0f5;
+    --muted: rgba(240,240,245,0.5);
+    --danger: #ff5c5c;
+    --gold: #f5c518;
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+  }
+
+  #app {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0 2rem;
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .screen { display: none; width: 100%; max-width: 420px; padding: 1.5rem 1.25rem; animation: fadeIn 0.3s ease; }
+  .screen.active { display: flex; flex-direction: column; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.25rem; width: 100%; max-width: 420px;
+    font-family: var(--font-head); font-size: 11px; letter-spacing: 0.12em;
+    color: var(--muted); text-transform: uppercase;
+  }
+  .logo { font-size: 15px; font-weight: 800; color: var(--text); letter-spacing: 0.05em; }
+  .logo span { color: var(--accent); }
+
+  h1 { font-family: var(--font-head); font-size: 28px; font-weight: 800; line-height: 1.15; }
+  h2 { font-family: var(--font-head); font-size: 20px; font-weight: 700; }
+
+  .btn {
+    display: block; width: 100%; padding: 14px; border-radius: 12px;
+    font-family: var(--font-head); font-size: 14px; font-weight: 700; letter-spacing: 0.04em;
+    border: none; cursor: pointer; transition: transform 0.1s, opacity 0.15s;
+    text-align: center;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--accent); color: #0a0a0f; }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-outline { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
+  .btn + .btn { margin-top: 10px; }
+
+  .avatar-row {
+    display: flex; justify-content: space-around; align-items: center;
+    margin: 1.5rem 0;
+  }
+  .avatar-box { text-align: center; }
+  .avatar {
+    width: 72px; height: 72px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin: 0 auto 8px;
+    border: 2.5px solid var(--border);
+  }
+  .avatar.you { background: linear-gradient(135deg,#2b2040,#3d2f6b); border-color: var(--accent2); }
+  .avatar.opp { background: linear-gradient(135deg,#0e2a1a,#0e4030); border-color: #2de8a0; }
+  .avatar-name { font-size: 13px; color: var(--muted); }
+  .vs-badge {
+    font-family: var(--font-head); font-size: 13px; font-weight: 800;
+    color: var(--muted); letter-spacing: 0.1em;
+  }
+
+  .challenge-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .challenge-card p { font-size: 15px; font-weight: 500; }
+  .challenge-card .sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  .game-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+  .game-badge {
+    font-family: var(--font-head); font-size: 10px; font-weight: 700;
+    background: var(--accent); color: #0a0a0f;
+    padding: 3px 10px; border-radius: 20px; letter-spacing: 0.08em;
+  }
+  .progress-dots { display: flex; gap: 6px; margin-left: auto; }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--surface2); border: 1px solid var(--border);
+  }
+  .dot.done { background: var(--accent); border-color: var(--accent); }
+  .dot.active { background: var(--accent2); border-color: var(--accent2); }
+
+  .game-area {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.25rem; margin-bottom: 1rem; flex: 1;
+  }
+
+  .timer-bar-wrap {
+    height: 4px; background: var(--surface2); border-radius: 4px;
+    margin-bottom: 1.25rem; overflow: hidden;
+  }
+  .timer-bar { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.1s linear; }
+
+  .score-mini {
+    display: flex; justify-content: space-between; font-size: 12px;
+    color: var(--muted); margin-bottom: 1.25rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 8px 12px;
+  }
+  .score-mini .col { display: flex; flex-direction: column; gap: 2px; }
+  .score-mini .col.right { text-align: right; }
+  .score-mini .s-label { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .score-mini .s-val { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--text); }
+  .score-mini .s-val.you-col { color: var(--accent2); }
+  .score-mini .s-val.opp-col { color: #2de8a0; }
+
+  .pattern-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 8px; margin: 0.75rem 0;
+  }
+  .pattern-cell {
+    aspect-ratio: 1; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-head); font-size: 18px; font-weight: 700;
+    cursor: pointer; border: 1.5px solid var(--border);
+    background: var(--surface2); transition: border-color 0.15s, background 0.15s;
+  }
+  .pattern-cell:hover { border-color: var(--accent); }
+  .pattern-cell.selected { border-color: var(--accent); background: rgba(200,241,53,0.1); }
+  .pattern-cell.correct { border-color: #2de8a0; background: rgba(45,232,160,0.12); }
+  .pattern-cell.wrong { border-color: var(--danger); background: rgba(255,92,92,0.1); }
+  .pattern-cell.blank { border-style: dashed; cursor: default; }
+  .pattern-q { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+
+  .tap-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 8px; margin: 0.75rem 0;
+  }
+  .tap-cell {
+    aspect-ratio: 1; border-radius: 10px;
+    background: var(--surface2); border: 1.5px solid var(--border);
+    cursor: pointer; transition: all 0.1s; display: flex;
+    align-items: center; justify-content: center;
+  }
+  .tap-cell.lit { background: var(--accent); border-color: var(--accent); }
+  .tap-cell.hit { background: #2de8a0; border-color: #2de8a0; }
+  .tap-cell.miss { background: var(--danger); border-color: var(--danger); }
+
+  .tap-score-big {
+    font-family: var(--font-head); font-size: 42px; font-weight: 800;
+    text-align: center; color: var(--accent); margin: 0.5rem 0;
+  }
+  .tap-label { font-size: 12px; color: var(--muted); text-align: center; margin-bottom: 0.75rem; }
+
+  .memory-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 8px; margin: 0.75rem 0;
+  }
+  .mem-card {
+    aspect-ratio: 1; border-radius: 8px;
+    background: var(--surface2); border: 1.5px solid var(--border);
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; user-select: none;
+  }
+  .mem-card.revealed { background: var(--surface); border-color: var(--accent2); }
+  .mem-card.matched { background: rgba(45,232,160,0.12); border-color: #2de8a0; }
+  .mem-card.wrong-flash { background: rgba(255,92,92,0.15); border-color: var(--danger); }
+
+  .brain-visual {
+    width: 100px; height: 100px; margin: 0 auto 1rem;
+    background: var(--surface2); border-radius: 50%;
+    border: 2px solid var(--accent2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px;
+  }
+  .brain-score { text-align: center; margin-bottom: 1.25rem; }
+  .brain-score .weight { font-family: var(--font-head); font-size: 36px; font-weight: 800; color: var(--accent); }
+  .brain-score .unit { font-size: 14px; color: var(--muted); margin-top: -4px; }
+
+  .vs-result {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1rem 1.25rem; margin-bottom: 1rem;
+  }
+  .vs-result .names { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  .vs-bar-wrap { display: flex; gap: 4px; height: 10px; border-radius: 10px; overflow: hidden; margin-bottom: 6px; }
+  .vs-bar-you { background: var(--accent2); border-radius: 10px 0 0 10px; transition: width 0.6s ease; }
+  .vs-bar-opp { background: #2de8a0; border-radius: 0 10px 10px 0; transition: width 0.6s ease; flex: 1; }
+  .vs-scores { display: flex; justify-content: space-between; font-family: var(--font-head); font-size: 20px; font-weight: 700; }
+  .vs-scores .you-score { color: var(--accent2); }
+  .vs-scores .opp-score { color: #2de8a0; }
+
+  .result-verdict {
+    font-family: var(--font-head); font-size: 18px; font-weight: 800;
+    text-align: center; margin-bottom: 4px;
+  }
+  .result-verdict.win { color: var(--accent); }
+  .result-verdict.lose { color: var(--muted); }
+  .percentile { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 1.25rem; }
+
+  .league-badge {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1rem 1.25rem; margin-bottom: 1rem;
+  }
+  .league-icon { font-size: 32px; }
+  .league-name { font-family: var(--font-head); font-size: 18px; font-weight: 800; color: var(--gold); }
+  .league-sub { font-size: 12px; color: var(--muted); }
+
+  .leaderboard { margin-bottom: 1rem; }
+  .lb-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px; border-radius: 10px; margin-bottom: 4px;
+    background: var(--surface); border: 1px solid var(--border);
+  }
+  .lb-row.you-row { border-color: var(--accent2); background: rgba(123,94,167,0.12); }
+  .lb-rank { font-family: var(--font-head); font-size: 13px; font-weight: 700; width: 20px; color: var(--muted); }
+  .lb-name { flex: 1; font-size: 14px; }
+  .lb-pts { font-family: var(--font-head); font-size: 13px; font-weight: 700; color: var(--accent); }
+  .lb-crown { font-size: 14px; }
+
+  .countdown-row {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 14px; margin-bottom: 1rem;
+    font-size: 13px;
+  }
+  .countdown-label { color: var(--muted); }
+  .countdown-val { font-family: var(--font-head); font-weight: 700; color: var(--gold); }
+
+  .advance-note {
+    font-size: 12px; color: var(--muted); text-align: center;
+    margin-bottom: 1.25rem; line-height: 1.5;
+  }
+  .advance-note strong { color: var(--accent); }
+
+  .feedback-toast {
+    position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+    background: var(--surface); border: 1px solid var(--accent);
+    color: var(--accent); font-family: var(--font-head); font-size: 13px; font-weight: 700;
+    padding: 6px 18px; border-radius: 20px; opacity: 0;
+    pointer-events: none; transition: opacity 0.2s;
+    white-space: nowrap; z-index: 99;
+  }
+  .feedback-toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="toast" class="feedback-toast"></div>
+
+  <div class="top-bar">
+    <span class="logo">WHO'S<span> SMARTER</span></span>
+    <span id="top-label">challenge mode</span>
+  </div>
+
+  <!-- SCREEN 0: HOME -->
+  <div class="screen active" id="s0">
+    <div style="margin-bottom:1.5rem">
+      <h1 style="margin-bottom:6px">Prove your<br>brain power.</h1>
+      <p style="font-size:14px;color:var(--muted)">Challenge friends. Climb the league. Dominate.</p>
+    </div>
+    <div class="avatar-row">
+      <div class="avatar-box">
+        <div class="avatar you">🧠</div>
+        <div class="avatar-name">You</div>
+      </div>
+      <div>
+        <div style="text-align:center;margin-bottom:6px">
+          <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--accent)">1</div>
+          <div style="font-size:11px;color:var(--muted)">challenge waiting</div>
+        </div>
+      </div>
+      <div class="avatar-box">
+        <div class="avatar opp">🦊</div>
+        <div class="avatar-name">John</div>
+      </div>
+    </div>
+    <div class="challenge-card">
+      <p>John challenged you!</p>
+      <p class="sub">3 rounds · Strategy · Speed · Memory</p>
+    </div>
+    <button class="btn btn-primary" onclick="goTo('s1')">Accept Challenge</button>
+    <button class="btn btn-outline" onclick="goTo('s6')">View League</button>
+  </div>
+
+  <!-- SCREEN 1: CHALLENGE DETAILS -->
+  <div class="screen" id="s1">
+    <h2 style="margin-bottom:4px">New Challenge</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:1.25rem">3 games · earn up to 150 pts</p>
+    <div class="avatar-row" style="margin:0 0 1.25rem">
+      <div class="avatar-box"><div class="avatar you">🧠</div><div class="avatar-name">You</div></div>
+      <div class="vs-badge">VS</div>
+      <div class="avatar-box"><div class="avatar opp">🦊</div><div class="avatar-name">John</div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.25rem">
+      <div class="challenge-card" style="margin:0;padding:12px 14px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:22px">🧩</div>
+        <div><div style="font-size:14px;font-weight:500">Game 1 — Pattern Logic</div><div style="font-size:12px;color:var(--muted)">Find the missing number</div></div>
+      </div>
+      <div class="challenge-card" style="margin:0;padding:12px 14px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:22px">⚡</div>
+        <div><div style="font-size:14px;font-weight:500">Game 2 — Speed Tap</div><div style="font-size:12px;color:var(--muted)">Hit the lit tiles in time</div></div>
+      </div>
+      <div class="challenge-card" style="margin:0;padding:12px 14px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:22px">🃏</div>
+        <div><div style="font-size:14px;font-weight:500">Game 3 — Memory Match</div><div style="font-size:12px;color:var(--muted)">Match pairs before time runs out</div></div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="startGame()">Let's Go</button>
+    <button class="btn btn-secondary" onclick="goTo('s0')">Back</button>
+  </div>
+
+  <!-- SCREEN 2: GAME 1 - PATTERN LOGIC -->
+  <div class="screen" id="s2">
+    <div class="game-header">
+      <span class="game-badge">GAME 1</span>
+      <span style="font-size:13px;color:var(--muted)">Pattern Logic</span>
+      <div class="progress-dots">
+        <div class="dot active" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div>
+      </div>
+    </div>
+    <div class="timer-bar-wrap"><div class="timer-bar" id="timer1" style="width:100%"></div></div>
+    <div class="game-area">
+      <p class="pattern-q" id="pq">Which number completes the pattern?</p>
+      <div class="pattern-grid" id="pattern-grid"></div>
+      <div style="height:12px"></div>
+      <p style="font-size:12px;color:var(--muted);text-align:center" id="p-hint">Select the missing value</p>
+    </div>
+    <div class="score-mini">
+      <div class="col">
+        <span class="s-label">You — this game</span>
+        <span class="s-val you-col" id="g1-you">0 pts</span>
+      </div>
+      <div class="col" style="text-align:center">
+        <span class="s-label">Total so far</span>
+        <span class="s-val" id="total-you-1">0 pts</span>
+      </div>
+      <div class="col right">
+        <span class="s-label">John — this game</span>
+        <span class="s-val opp-col" id="g1-opp">? pts</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: GAME 2 - SPEED TAP -->
+  <div class="screen" id="s3">
+    <div class="game-header">
+      <span class="game-badge">GAME 2</span>
+      <span style="font-size:13px;color:var(--muted)">Speed Tap</span>
+      <div class="progress-dots">
+        <div class="dot done"></div><div class="dot active"></div><div class="dot"></div>
+      </div>
+    </div>
+    <div class="timer-bar-wrap"><div class="timer-bar" id="timer2" style="width:100%"></div></div>
+    <div class="game-area">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Tap the glowing tile!</p>
+      <div class="tap-score-big" id="tap-score">0</div>
+      <p class="tap-label">hits this game</p>
+      <div class="tap-grid" id="tap-grid"></div>
+    </div>
+    <div class="score-mini">
+      <div class="col">
+        <span class="s-label">You — this game</span>
+        <span class="s-val you-col" id="g2-you">0 pts</span>
+      </div>
+      <div class="col" style="text-align:center">
+        <span class="s-label">Total so far</span>
+        <span class="s-val" id="total-you-2">0 pts</span>
+      </div>
+      <div class="col right">
+        <span class="s-label">John — this game</span>
+        <span class="s-val opp-col" id="g2-opp">? pts</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: GAME 3 - MEMORY -->
+  <div class="screen" id="s4">
+    <div class="game-header">
+      <span class="game-badge">GAME 3</span>
+      <span style="font-size:13px;color:var(--muted)">Memory Match</span>
+      <div class="progress-dots">
+        <div class="dot done"></div><div class="dot done"></div><div class="dot active"></div>
+      </div>
+    </div>
+    <div class="timer-bar-wrap"><div class="timer-bar" id="timer3" style="width:100%"></div></div>
+    <div class="game-area">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Match all pairs!</p>
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+        <span style="font-size:12px;color:var(--muted)">Matches: <strong id="match-count" style="color:var(--accent)">0/4</strong></span>
+        <span style="font-size:12px;color:var(--muted)">Moves: <strong id="move-count">0</strong></span>
+      </div>
+      <div class="memory-grid" id="memory-grid"></div>
+    </div>
+    <div class="score-mini">
+      <div class="col">
+        <span class="s-label">You — this game</span>
+        <span class="s-val you-col" id="g3-you">0 pts</span>
+      </div>
+      <div class="col" style="text-align:center">
+        <span class="s-label">Total so far</span>
+        <span class="s-val" id="total-you-3">0 pts</span>
+      </div>
+      <div class="col right">
+        <span class="s-label">John — this game</span>
+        <span class="s-val opp-col" id="g3-opp">? pts</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: RESULT -->
+  <div class="screen" id="s5">
+    <h2 style="margin-bottom:1.25rem;text-align:center">Your Result</h2>
+    <div class="brain-visual">🧠</div>
+    <div class="brain-score">
+      <div class="weight" id="final-weight">100</div>
+      <div class="unit">brain weight (g)</div>
+    </div>
+    <div class="vs-result">
+      <div class="names"><span>You</span><span>John</span></div>
+      <div class="vs-bar-wrap">
+        <div class="vs-bar-you" id="vs-bar-you" style="width:50%"></div>
+        <div class="vs-bar-opp" id="vs-bar-opp"></div>
+      </div>
+      <div class="vs-scores">
+        <span class="you-score" id="vs-you-score">100</span>
+        <span class="opp-score" id="vs-opp-score">99</span>
+      </div>
+    </div>
+    <div class="result-verdict" id="verdict"></div>
+    <div class="percentile" id="percentile-txt"></div>
+    <button class="btn btn-primary" id="cta1-btn" onclick="goTo('s6')">See Your Ranking</button>
+    <button class="btn btn-secondary" id="cta2-btn" onclick="goTo('s0')">Back to Home</button>
+  </div>
+
+  <!-- SCREEN 6: LEAGUE -->
+  <div class="screen" id="s6">
+    <h2 style="margin-bottom:1rem">Your Standing</h2>
+    <div class="league-badge">
+      <div class="league-icon">🥉</div>
+      <div><div class="league-name">Bronze League</div><div class="league-sub">Season ends soon — keep climbing!</div></div>
+    </div>
+    <div class="countdown-row">
+      <span class="countdown-label">League resets in</span>
+      <span class="countdown-val" id="countdown-val">1d 3h 22m</span>
+    </div>
+    <div class="leaderboard" id="leaderboard"></div>
+    <div class="advance-note">
+      Top 5 players advance to <strong>Silver League</strong><br>
+      You need <strong id="pts-gap">40</strong> more points to reach #5
+    </div>
+    <button class="btn btn-primary" onclick="goTo('s0')">Play New Challenge</button>
+  </div>
+</div>
+
+<script>
+const state = {
+  scores: { you: 0, opp: 0 },
+  g1score: 0, g2score: 0, g3score: 0,
+  g1oppScore: 0, g2oppScore: 0, g3oppScore: 0,
+  timerInterval: null
+};
+
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('top-label').textContent = {
+    s0:'challenge mode', s1:'challenge mode',
+    s2:'game 1 of 3', s3:'game 2 of 3',
+    s4:'game 3 of 3', s5:'results', s6:'league'
+  }[id] || '';
+}
+
+function toast(msg, dur=1200) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+function startGame() {
+  state.scores = { you: 0, opp: 0 };
+  state.g1score = state.g2score = state.g3score = 0;
+  state.g1oppScore = state.g2oppScore = state.g3oppScore = 0;
+  goTo('s2');
+  setTimeout(() => initPattern(), 200);
+}
+
+// ---- GAME 1: Pattern Logic ----
+const patterns = [
+  { seq:[2,4,6,8,null,12], answer:10, choices:[7,9,10,11], label:'2, 4, 6, 8, ?, 12' },
+  { seq:[1,4,9,16,null,36], answer:25, choices:[20,22,25,28], label:'1, 4, 9, 16, ?, 36' },
+  { seq:[3,6,12,24,null,96], answer:48, choices:[40,44,48,52], label:'3, 6, 12, 24, ?, 96' },
+];
+let pState = { q:0 };
+
+function initPattern() {
+  pState.q = Math.floor(Math.random() * patterns.length);
+  const p = patterns[pState.q];
+  const grid = document.getElementById('pattern-grid');
+  document.getElementById('pq').textContent = `Find the missing number: ${p.label}`;
+  document.getElementById('p-hint').textContent = 'Select the missing value';
+  grid.innerHTML = '';
+  p.seq.slice(0, 4).forEach(v => {
+    const c = document.createElement('div');
+    c.className = 'pattern-cell';
+    c.textContent = v === null ? '?' : v;
+    if (v === null) c.classList.add('blank');
+    grid.appendChild(c);
+  });
+  const shuffled = [...p.choices].sort(() => Math.random()-0.5);
+  shuffled.forEach(ch => {
+    const c = document.createElement('div');
+    c.className = 'pattern-cell';
+    c.textContent = ch;
+    c.onclick = () => selectPattern(ch, c, p.answer);
+    grid.appendChild(c);
+  });
+  startTimer('timer1', 15, () => {
+    // time's up — reveal correct answer, give 0 pts for this game
+    document.querySelectorAll('#pattern-grid .pattern-cell').forEach(c => {
+      c.onclick = null;
+      if (parseInt(c.textContent) === p.answer) c.classList.add('correct');
+    });
+    document.getElementById('p-hint').textContent = "Time's up!";
+    toast("Time's up!", 900);
+    document.getElementById('g1-you').textContent = state.g1score + ' pts';
+    updateTotal(1);
+    addOppScore('g1', 38, 50);
+    setTimeout(() => { goTo('s3'); initTap(); }, 1200);
+  });
+}
+
+function selectPattern(val, el, answer) {
+  if (val === answer) {
+    clearTimer();
+    document.querySelectorAll('#pattern-grid .pattern-cell').forEach(c => { c.onclick = null; });
+    el.classList.add('correct');
+    state.g1score += 50; toast('+50 pts! Correct!');
+    document.getElementById('g1-you').textContent = state.g1score + ' pts';
+    updateTotal(1);
+    addOppScore('g1', 38, 50);
+    setTimeout(() => { goTo('s3'); initTap(); }, 1000);
+  } else {
+    // red glow, stay on screen, let player retry
+    el.classList.add('wrong');
+    el.onclick = null; // disable this wrong choice
+    toast('Wrong — try again!', 900);
+    // shake hint
+    document.getElementById('p-hint').textContent = 'Not quite — keep trying!';
+  }
+}
+
+// ---- GAME 2: Speed Tap ----
+let tapState = { hits: 0, lit: -1, tapTimer: null };
+
+function initTap() {
+  tapState.hits = 0; tapState.lit = -1;
+  document.getElementById('tap-score').textContent = '0';
+  const grid = document.getElementById('tap-grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 16; i++) {
+    const c = document.createElement('div');
+    c.className = 'tap-cell';
+    c.dataset.i = i;
+    c.onclick = () => handleTap(i, c);
+    grid.appendChild(c);
+  }
+  startTimer('timer2', 12, () => {
+    clearTapInterval();
+    state.g2score = Math.min(tapState.hits * 10, 50);
+    document.getElementById('g2-you').textContent = state.g2score + ' pts';
+    updateTotal(2);
+    addOppScore('g2', 30, 50);
+    setTimeout(() => { goTo('s4'); initMemory(); }, 800);
+  });
+  scheduleTap();
+}
+
+function scheduleTap() {
+  tapState.tapTimer = setTimeout(() => {
+    const cells = document.querySelectorAll('.tap-cell');
+    if (!cells.length) return;
+    if (tapState.lit >= 0) cells[tapState.lit].classList.remove('lit');
+    tapState.lit = Math.floor(Math.random() * 16);
+    cells[tapState.lit].classList.add('lit');
+    scheduleTap();
+  }, 700 + Math.random() * 400);
+}
+
+function clearTapInterval() {
+  clearTimeout(tapState.tapTimer);
+  document.querySelectorAll('.tap-cell').forEach(c => c.classList.remove('lit'));
+}
+
+function handleTap(i, el) {
+  if (i === tapState.lit) {
+    el.classList.remove('lit'); el.classList.add('hit');
+    tapState.hits++; tapState.lit = -1;
+    const pts = Math.min(tapState.hits*10, 50);
+    document.getElementById('tap-score').textContent = tapState.hits;
+    document.getElementById('g2-you').textContent = pts + ' pts';
+    updateTotal(2);
+    setTimeout(() => el.classList.remove('hit'), 300);
+    clearTimeout(tapState.tapTimer);
+    setTimeout(scheduleTap, 200);
+  } else {
+    el.classList.add('miss');
+    setTimeout(() => el.classList.remove('miss'), 300);
+  }
+}
+
+// ---- GAME 3: Memory Match ----
+const memEmojis = ['🌙','🌙','⭐','⭐','🔥','🔥','💎','💎'];
+let memState = { cards:[], flipped:[], matched:0, moves:0, locked:false };
+
+function initMemory() {
+  memState = { cards:[], flipped:[], matched:0, moves:0, locked:false };
+  const shuffled = [...memEmojis].sort(() => Math.random()-0.5);
+  const grid = document.getElementById('memory-grid');
+  grid.innerHTML = '';
+  document.getElementById('match-count').textContent = '0/4';
+  document.getElementById('move-count').textContent = '0';
+  shuffled.forEach((emoji, i) => {
+    const c = document.createElement('div');
+    c.className = 'mem-card';
+    c.dataset.emoji = emoji;
+    c.textContent = '';
+    c.onclick = () => flipCard(i, c, emoji);
+    grid.appendChild(c);
+    memState.cards.push({ el: c, emoji, matched: false });
+  });
+  memState.cards.forEach(c => { c.el.classList.add('revealed'); c.el.textContent = c.emoji; });
+  setTimeout(() => {
+    memState.cards.forEach(c => { c.el.classList.remove('revealed'); c.el.textContent = ''; });
+  }, 1500);
+  startTimer('timer3', 20, () => {
+    state.g3score = memState.matched * 12;
+    document.getElementById('g3-you').textContent = state.g3score + ' pts';
+    updateTotal(3);
+    addOppScore('g3', 30, 48);
+    setTimeout(showResults, 800);
+  });
+}
+
+function flipCard(i, el, emoji) {
+  if (memState.locked) return;
+  if (memState.cards[i].matched) return;
+  if (memState.flipped.length === 2) return;
+  if (memState.flipped[0] === i) return;
+  el.classList.add('revealed'); el.textContent = emoji;
+  memState.flipped.push(i);
+  if (memState.flipped.length === 2) {
+    memState.moves++;
+    document.getElementById('move-count').textContent = memState.moves;
+    const [a, b] = memState.flipped;
+    if (memState.cards[a].emoji === memState.cards[b].emoji) {
+      memState.cards[a].matched = memState.cards[b].matched = true;
+      memState.cards[a].el.classList.add('matched');
+      memState.cards[b].el.classList.add('matched');
+      memState.matched++;
+      document.getElementById('match-count').textContent = `${memState.matched}/4`;
+      memState.flipped = [];
+      toast(`+12 pts! Match!`);
+      state.g3score = memState.matched * 12;
+      document.getElementById('g3-you').textContent = state.g3score + ' pts';
+      updateTotal(3);
+      if (memState.matched === 4) {
+        clearTimer();
+        addOppScore('g3', 30, 48);
+        toast('All matched! +12 bonus pts');
+        state.g3score += 12;
+        document.getElementById('g3-you').textContent = state.g3score + ' pts';
+        updateTotal(3);
+        setTimeout(showResults, 1000);
+      }
+    } else {
+      memState.locked = true;
+      memState.cards[a].el.classList.add('wrong-flash');
+      memState.cards[b].el.classList.add('wrong-flash');
+      setTimeout(() => {
+        memState.cards[a].el.classList.remove('revealed','wrong-flash'); memState.cards[a].el.textContent = '';
+        memState.cards[b].el.classList.remove('revealed','wrong-flash'); memState.cards[b].el.textContent = '';
+        memState.flipped = []; memState.locked = false;
+      }, 700);
+    }
+  }
+}
+
+// ---- TIMER ----
+function startTimer(id, duration, onEnd) {
+  clearTimer();
+  const bar = document.getElementById(id);
+  if (!bar) return;
+  let elapsed = 0;
+  state.timerInterval = setInterval(() => {
+    elapsed += 0.1;
+    const pct = Math.max(0, 100 - (elapsed / duration * 100));
+    bar.style.width = pct + '%';
+    if (elapsed >= duration) { clearTimer(); onEnd(); }
+  }, 100);
+}
+
+function clearTimer() {
+  if (state.timerInterval) { clearInterval(state.timerInterval); state.timerInterval = null; }
+}
+
+function addOppScore(game, min, max) {
+  const score = min + Math.floor(Math.random() * (max - min));
+  state[game + 'oppScore'] = score;
+  document.getElementById(game + '-opp').textContent = score + ' pts';
+}
+
+function updateTotal(upToGame) {
+  let t = 0;
+  if (upToGame >= 1) t += state.g1score;
+  if (upToGame >= 2) t += state.g2score;
+  if (upToGame >= 3) t += state.g3score;
+  const el = document.getElementById('total-you-' + upToGame);
+  if (el) el.textContent = t + ' pts';
+}
+
+// ---- SHOW RESULTS ----
+function showResults() {
+  clearTimer(); clearTapInterval();
+  const youTotal = state.g1score + state.g2score + state.g3score;
+  const oppTotal = state.g1oppScore + state.g2oppScore + state.g3oppScore;
+
+  // Brain weight = derived from score, same formula for both players so bar and number match
+  const youWeight = Math.round(80 + youTotal * 0.4);
+  const oppWeight = Math.round(80 + oppTotal * 0.4);
+  const youPct = Math.max(5, Math.min(95, Math.floor(40 + Math.random() * 50)));
+
+  document.getElementById('final-weight').textContent = youWeight;
+  // Bar shows brain weight proportions (not raw pts) — now consistent with the number shown
+  document.getElementById('vs-you-score').textContent = youWeight + 'g';
+  document.getElementById('vs-opp-score').textContent = oppWeight + 'g';
+
+  const youBar = Math.round((youWeight / (youWeight + oppWeight)) * 100);
+  document.getElementById('vs-bar-you').style.width = youBar + '%';
+
+  const verdict = document.getElementById('verdict');
+  const cta1 = document.getElementById('cta1-btn');
+  const cta2 = document.getElementById('cta2-btn');
+
+  if (youWeight >= oppWeight) {
+    verdict.textContent = 'You are smarter than John!';
+    verdict.className = 'result-verdict win';
+    cta1.textContent = 'See Your Ranking';
+    cta2.textContent = 'Share Result';
+    cta1.onclick = () => goTo('s6');
+    cta2.onclick = () => toast('Share coming soon!');
+  } else {
+    verdict.textContent = 'John is smarter this time!';
+    verdict.className = 'result-verdict lose';
+    cta1.textContent = 'Rematch John';
+    cta2.textContent = 'See Your Ranking';
+    cta1.onclick = () => startGame();
+    cta2.onclick = () => goTo('s6');
+  }
+
+  document.getElementById('percentile-txt').textContent =
+    `You are smarter than ${youPct}% of players globally`;
+
+  goTo('s5');
+  updateLeaderboard(300 + youWeight);
+}
+
+// ---- LEADERBOARD ----
+function updateLeaderboard(myPts) {
+  const players = [
+    { name: 'CortexKing', pts: 980 },
+    { name: 'BrainBlast', pts: 870 },
+    { name: 'NeuroNova', pts: 760 },
+    { name: 'SynapseX', pts: 650 },
+    { name: 'MindBender', pts: 540 },
+    { name: 'You', pts: myPts || 460, isYou: true },
+    { name: 'John', pts: 430 },
+  ];
+  players.sort((a,b) => b.pts - a.pts);
+
+  const myIdx = players.findIndex(p=>p.isYou);
+  const rank5pts = players[4]?.pts || 500;
+  document.getElementById('pts-gap').textContent = Math.max(0, rank5pts - (myPts||460));
+
+  const lb = document.getElementById('leaderboard');
+  lb.innerHTML = '';
+  players.slice(0,7).forEach((p, i) => {
+    const row = document.createElement('div');
+    row.className = 'lb-row' + (p.isYou ? ' you-row' : '');
+    const crown = i < 3 ? ['🥇','🥈','🥉'][i] : '';
+    row.innerHTML = `
+      <span class="lb-rank">${i+1}</span>
+      <span class="lb-name">${p.isYou ? '<strong>You</strong>' : p.name}</span>
+      ${crown ? `<span class="lb-crown">${crown}</span>` : ''}
+      <span class="lb-pts">${p.pts}</span>
+    `;
+    lb.appendChild(row);
+  });
+}
+
+// ---- COUNTDOWN ----
+function updateCountdown() {
+  const el = document.getElementById('countdown-val');
+  let h = 3, m = 22, s = 0;
+  setInterval(() => {
+    s--; if (s < 0) { s = 59; m--; } if (m < 0) { m = 59; h--; }
+    if (h < 0) { h = 0; m = 0; s = 0; }
+    el.textContent = `1d ${h}h ${m}m`;
+  }, 1000);
+}
+
+updateLeaderboard(460);
+updateCountdown();
+</script>
+</body>
+</html>
