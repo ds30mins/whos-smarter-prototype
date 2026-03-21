@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Who's Smarter?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -20,8 +20,8 @@
     --muted: rgba(240,240,245,0.5);
     --danger: #ff5c5c;
     --gold: #f5c518;
-    --font-head: 'Syne', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
+    --font-head: 'Plus Jakarta Sans', Arial, sans-serif;
+    --font-body: 'Plus Jakarta Sans', Arial, sans-serif;
   }
 
   body {
@@ -54,14 +54,14 @@
   .top-bar {
     display: flex; align-items: center; justify-content: space-between;
     padding: 1rem 1.25rem; width: 100%; max-width: 420px;
-    font-family: var(--font-head); font-size: 11px; letter-spacing: 0.12em;
+    font-family: var(--font-head); font-size: 11px; letter-spacing: 0.04em;
     color: var(--muted); text-transform: uppercase;
   }
-  .logo { font-size: 15px; font-weight: 800; color: var(--text); letter-spacing: 0.05em; }
+  .logo { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: 0.02em; }
   .logo span { color: var(--accent); }
 
-  h1 { font-family: var(--font-head); font-size: 28px; font-weight: 800; line-height: 1.15; }
-  h2 { font-family: var(--font-head); font-size: 20px; font-weight: 700; }
+  h1 { font-family: var(--font-head); font-size: 26px; font-weight: 700; line-height: 1.2; }
+  h2 { font-family: var(--font-head); font-size: 19px; font-weight: 600; }
 
   .btn {
     display: block; width: 100%; padding: 14px; border-radius: 12px;
@@ -107,9 +107,9 @@
     margin-bottom: 1.25rem;
   }
   .game-badge {
-    font-family: var(--font-head); font-size: 10px; font-weight: 700;
+    font-family: var(--font-head); font-size: 11px; font-weight: 700;
     background: var(--accent); color: #0a0a0f;
-    padding: 3px 10px; border-radius: 20px; letter-spacing: 0.08em;
+    padding: 3px 10px; border-radius: 20px; letter-spacing: 0.02em;
   }
   .progress-dots { display: flex; gap: 6px; margin-left: auto; }
   .dot {
@@ -131,17 +131,19 @@
   .timer-bar { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.1s linear; }
 
   .score-mini {
-    display: flex; justify-content: space-between; font-size: 12px;
-    color: var(--muted); margin-bottom: 1.25rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; color: var(--muted); margin-bottom: 1.25rem;
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; padding: 8px 12px;
+    border-radius: 10px; padding: 10px 14px;
   }
-  .score-mini .col { display: flex; flex-direction: column; gap: 2px; }
+  .score-mini .col { display: flex; flex-direction: column; gap: 1px; }
   .score-mini .col.right { text-align: right; }
-  .score-mini .s-label { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
-  .score-mini .s-val { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--text); }
+  .score-mini .s-label { font-size: 11px; color: var(--muted); font-weight: 400; }
+  .score-mini .s-val { font-size: 14px; font-weight: 600; color: var(--text); }
   .score-mini .s-val.you-col { color: var(--accent2); }
   .score-mini .s-val.opp-col { color: #2de8a0; }
+  .score-mini .divider { font-size: 11px; color: var(--muted); text-align: center; }
+  .score-mini .divider span { display: block; font-size: 12px; font-weight: 600; color: var(--text); }
 
   .pattern-grid {
     display: grid; grid-template-columns: repeat(4, 1fr);
@@ -150,7 +152,7 @@
   .pattern-cell {
     aspect-ratio: 1; border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-head); font-size: 18px; font-weight: 700;
+    font-family: var(--font-body); font-size: 17px; font-weight: 600;
     cursor: pointer; border: 1.5px solid var(--border);
     background: var(--surface2); transition: border-color 0.15s, background 0.15s;
   }
@@ -176,7 +178,7 @@
   .tap-cell.miss { background: var(--danger); border-color: var(--danger); }
 
   .tap-score-big {
-    font-family: var(--font-head); font-size: 42px; font-weight: 800;
+    font-family: var(--font-head); font-size: 40px; font-weight: 700;
     text-align: center; color: var(--accent); margin: 0.5rem 0;
   }
   .tap-label { font-size: 12px; color: var(--muted); text-align: center; margin-bottom: 0.75rem; }
@@ -204,8 +206,8 @@
     font-size: 48px;
   }
   .brain-score { text-align: center; margin-bottom: 1.25rem; }
-  .brain-score .weight { font-family: var(--font-head); font-size: 36px; font-weight: 800; color: var(--accent); }
-  .brain-score .unit { font-size: 14px; color: var(--muted); margin-top: -4px; }
+  .brain-score .weight { font-family: var(--font-head); font-size: 34px; font-weight: 700; color: var(--accent); }
+  .brain-score .unit { font-size: 14px; color: var(--muted); margin-top: -2px; }
 
   .vs-result {
     background: var(--surface); border: 1px solid var(--border);
@@ -215,12 +217,12 @@
   .vs-bar-wrap { display: flex; gap: 4px; height: 10px; border-radius: 10px; overflow: hidden; margin-bottom: 6px; }
   .vs-bar-you { background: var(--accent2); border-radius: 10px 0 0 10px; transition: width 0.6s ease; }
   .vs-bar-opp { background: #2de8a0; border-radius: 0 10px 10px 0; transition: width 0.6s ease; flex: 1; }
-  .vs-scores { display: flex; justify-content: space-between; font-family: var(--font-head); font-size: 20px; font-weight: 700; }
+  .vs-scores { display: flex; justify-content: space-between; font-family: var(--font-head); font-size: 18px; font-weight: 600; }
   .vs-scores .you-score { color: var(--accent2); }
   .vs-scores .opp-score { color: #2de8a0; }
 
   .result-verdict {
-    font-family: var(--font-head); font-size: 18px; font-weight: 800;
+    font-family: var(--font-head); font-size: 17px; font-weight: 700;
     text-align: center; margin-bottom: 4px;
   }
   .result-verdict.win { color: var(--accent); }
@@ -358,16 +360,15 @@
     </div>
     <div class="score-mini">
       <div class="col">
-        <span class="s-label">You — this game</span>
+        <span class="s-label">You (this game)</span>
         <span class="s-val you-col" id="g1-you">0 pts</span>
       </div>
-      <div class="col" style="text-align:center">
-        <span class="s-label">Total so far</span>
-        <span class="s-val" id="total-you-1">0 pts</span>
+      <div class="divider">
+        Total<span id="total-you-1">0 pts</span>
       </div>
       <div class="col right">
-        <span class="s-label">John — this game</span>
-        <span class="s-val opp-col" id="g1-opp">? pts</span>
+        <span class="s-label">John (this game)</span>
+        <span class="s-val opp-col" id="g1-opp">—</span>
       </div>
     </div>
   </div>
@@ -390,16 +391,15 @@
     </div>
     <div class="score-mini">
       <div class="col">
-        <span class="s-label">You — this game</span>
+        <span class="s-label">You (this game)</span>
         <span class="s-val you-col" id="g2-you">0 pts</span>
       </div>
-      <div class="col" style="text-align:center">
-        <span class="s-label">Total so far</span>
-        <span class="s-val" id="total-you-2">0 pts</span>
+      <div class="divider">
+        Total<span id="total-you-2">0 pts</span>
       </div>
       <div class="col right">
-        <span class="s-label">John — this game</span>
-        <span class="s-val opp-col" id="g2-opp">? pts</span>
+        <span class="s-label">John (this game)</span>
+        <span class="s-val opp-col" id="g2-opp">—</span>
       </div>
     </div>
   </div>
@@ -424,16 +424,15 @@
     </div>
     <div class="score-mini">
       <div class="col">
-        <span class="s-label">You — this game</span>
+        <span class="s-label">You (this game)</span>
         <span class="s-val you-col" id="g3-you">0 pts</span>
       </div>
-      <div class="col" style="text-align:center">
-        <span class="s-label">Total so far</span>
-        <span class="s-val" id="total-you-3">0 pts</span>
+      <div class="divider">
+        Total<span id="total-you-3">0 pts</span>
       </div>
       <div class="col right">
-        <span class="s-label">John — this game</span>
-        <span class="s-val opp-col" id="g3-opp">? pts</span>
+        <span class="s-label">John (this game)</span>
+        <span class="s-val opp-col" id="g3-opp">—</span>
       </div>
     </div>
   </div>
