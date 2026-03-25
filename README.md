@@ -58,7 +58,7 @@ Players are placed in 30-person divisions. League Points are earned purely throu
 
 ### Dual-Currency Economy
 - **League Points (soft currency):** Earned only through play. Drive rank movement. Cannot be bought.
-- **Gems (hard currency):** Earned slowly through play or purchased via IAP. Used exclusively for cosmetics (avatar accessories, division banners) and convenience features (streak shields, extra daily sprints).
+- **Gems (hard currency):** Earned slowly through play or purchased via IAP or rewarded ads/IAA. Used exclusively for cosmetics (avatar accessories, division banners) and convenience features (streak shields, extra daily sprints).
 
 The separation ensures players at every spend level compete fairly, while higher spenders earn visible status — not rankings.
 
