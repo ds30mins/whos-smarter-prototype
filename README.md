@@ -134,7 +134,7 @@ A: *"Find your rank"* copy vs. B: *"Test your brain"* copy. All else identical. 
 
 ## 🎮 Other Projects
 
-- [Mercantail — Pet Merge & Economy Prototype - Play the prototype](https://ds30mins.github.io/mercantail-pet-merge-prototype/) · [repo](https://github.com/ds30mins/mercantail-pet-merge-prototype)
+- Mercantail — Pet Merge & Economy Prototype · [Play the prototype](https://ds30mins.github.io/mercantail-pet-merge-prototype/) · [repo](https://github.com/ds30mins/mercantail-pet-merge-prototype)
 
 ---
 
