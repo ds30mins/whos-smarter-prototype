@@ -76,7 +76,7 @@ The separation ensures players at every spend level compete fairly, while higher
 | Async over real-time multiplayer | Removes scheduling friction for interstitial players; validated by Duolingo Friends Clash model |
 | 30-person leagues over global leaderboards | Global boards feel unattainable and anonymous; small divisions make promotion feel achievable and demotion feel threatening |
 | Cognitive framing over brain training framing | Brain training apps position cognitive challenge as a health outcome — users churn when they stop feeling they're improving. Entertainment framing sustains play without that ceiling. Also avoids FTC compliance risk for medical claims |
-| Soft currency for league points only | Protects competitive integrity; prevents pay-to-win perception that damaged Elevate's league launch |
+| Soft currency for league points only | Protects competitive integrity; prevents pay-to-win perception |
 | 3-game sprint format | Multi-category scoring reduces single-skill dominance, makes results feel fairer and broadens the viable player demographic |
 
 ---
