@@ -80,6 +80,13 @@ The separation ensures players at every spend level compete fairly, while higher
 | 3-game sprint format | Multi-category scoring reduces single-skill dominance, makes results feel fairer and broadens the viable player demographic |
 
 ---
+## ✨ Monetisation Model
+
+The recommended model is a hybrid IAP + rewarded ads model. IAP revenue comes from Gems — the hard currency used exclusively for cosmetics and convenience features, never for competitive advantage. 
+Suggested IAP tiers: $0.99 (impulse), $4.99 (seasonal bundle), $9.99/month (Brain Pass: ad-free + exclusive cosmetics). 
+Rewarded ads serve as a secondary stream, offering Gems in exchange for opt-in ad views. League Points — the competitive currency — are never purchasable, keeping the ranked experience skill-fair at every spend level.
+
+---
 
 ## 📊 KPIs This Prototype Is Designed to Measure
 
