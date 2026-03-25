@@ -19,7 +19,7 @@ The specific category this prototype targets — **async social competition buil
 - Trivia Crack 2 (cognitive + competitive, leagues)
 What none of them offer is a skill-fair competitive format with no pay-to-win ceiling — which is the gap this concept is designed to fill.
 
-This is not a brain training app. The framing is entertainment-first: *a social arena where intellectual performance is a currency for status — cognitive benefit is the side-effect, not the pitch.* That distinction matters both for positioning and for regulatory reasons (Lumosity was fined $50M in 2016 for medical claims).
+This is not a brain training app. The framing is entertainment-first: a social arena where intellectual performance is currency for status — cognitive benefit is the side-effect, not the pitch. That distinction matters both for how players experience the game and for how it's marketed.
 
 This prototype is a playable hypothesis for what that product could feel like — built to validate the core loop before any further investment.
 
