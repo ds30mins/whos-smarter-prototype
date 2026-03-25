@@ -8,11 +8,16 @@ A mobile-first async cognitive competition prototype exploring social mechanics 
 
 ## 🎯 Product Vision
 
-Who's Smarter? started as a **market research project** before becoming a prototype.
+"Who's Smarter?" started as a **market research project** before becoming a prototype.
 
-The mobile gaming market reached $103B in 2025, but the growth story has shifted: downloads fell 7.2% while IAP revenue still grew — meaning the competitive advantage now belongs to games that retain existing players, not acquire new ones. The data points to one consistent driver: **social competition**. Mid-core social games achieve 11.45% D30 retention against a hybrid-casual baseline of 5.86% — nearly double. Players in social networks within games are 50% more likely to keep playing than solo players.
+The mobile gaming market reached $103B in 2025, but the growth story has shifted: downloads fell 7.2% while IAP revenue still grew. 
+It means the competitive advantage now belongs to games that retain existing players, not acquire new ones. The clearest driver of retaining players is social competition. Mid-core social games achieve 11.45% D30 retention against a hybrid-casual baseline of 5.86% — nearly double. Players in social networks within games are 50% more likely to keep playing than solo players.
 
-The specific category this prototype targets — **async social competition built around cognitive mini-games** — sits in an underserved position. The closest reference points are Duolingo (async 1v1, league system, weekly seasons), Words With Friends 2 (friend challenges, async format), and Trivia Crack 2 (cognitive + competitive, leagues). What none of them offer is a **skill-fair competitive format with no pay-to-win ceiling** — which is the explicit gap this concept addresses, and a direct lesson drawn from Elevate's 2025 league launch, which drove +40% DAU initially but faced backlash for pay-to-win perception.
+The specific category this prototype targets — **async social competition built around cognitive mini-games** — sits in an underserved position. The closest reference points are:
+- Duolingo (league system, weekly seasons)
+- Words With Friends 2 (friend challenges, async format)
+- Trivia Crack 2 (cognitive + competitive, leagues)
+What none of them offer is a skill-fair competitive format with no pay-to-win ceiling — which is the gap this concept is designed to fill.
 
 This is not a brain training app. The framing is entertainment-first: *a social arena where intellectual performance is a currency for status — cognitive benefit is the side-effect, not the pitch.* That distinction matters both for positioning and for regulatory reasons (Lumosity was fined $50M in 2016 for medical claims).
 
